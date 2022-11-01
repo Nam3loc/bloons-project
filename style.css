@@ -5,5 +5,51 @@
 }
 
 body {
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
+#monkeyImg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+}
+
+#canvas1 {
+    border: 5px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1000px;
+    height: 1000px;
+    background-color: green;
+}
+
+
+
+
+
+
+
+
+/* Trying to create canvas using CSS Grid */
+
+/* #game-board {
+    border: 1px solid black;
+    display: grid;
+    background-color: green;
+    grid-template-columns: repeat(40, 20px [col-start]);
+    grid-template-rows:  repeat(40, 20px [row-start]);
+    justify-items: stretch;
+    align-items: stretch;
+}
+
+#path {
+    grid-column: 0/50;
+    grid-row-start: 25;
+    background-color: tan;
+} */
