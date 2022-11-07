@@ -33,16 +33,26 @@ class Balloon {
         this.redBalloonImage = new Image();
         this.redBalloonImage.src = './images/red-bloon-sprite-removebg.png';
 
-        this.balloonWidth = this.redBalloonImage.width = 220;
-        this.balloonHeight = this.redBalloonImage.height = 220;
+        this.balloonWidth = this.redBalloonImage.width;
+        this.balloonHeight = this.redBalloonImage.height;
         this.x = -100;
         this.y = 500;
+        this.center = {
+            x: this.balloonWidth / 2,
+            y: this.balloonHeight / 2
+        }
+
         this.speed = 0.6;
         this.movement = this.speed;
     }
 
     update() {
         this.x += this.movement;
+
+        // if(projectiles.x <= this.balloonWidth ||
+        //     projectiles.y <= this.balloonHeight) {
+        //         balloons.splice(i, 1);
+        //     }
     }
 
     draw() {
@@ -72,7 +82,7 @@ function handleBalloons() {
 const projectiles = [];
 
 class Projectile {
-    constructor(x, y) {
+    constructor(x, y, enemy) {
         this.dartImage = new Image();
         this.dartImage.src = 'images/dart-sprite-removebg.png'        
 
@@ -81,10 +91,25 @@ class Projectile {
         this.width = 20;
         this.height = 20;
         this.speed = 0.6;
+        this.velocity = {
+            x: 0,
+            y: 0
+        }
+
+        this.enemy = enemy;
     }
 
     update() {
         this.x += this.speed;
+
+        const angle = Math.atan2(balloons[0].y - this.y, 
+                                balloons[0].x - this.x
+        )
+        this.velocity.x = Math.cos(angle);
+        this.velocity.y = Math.sin(angle);
+
+        this.x += this.velocity.x;
+        this.y += this.velocity.y;
     }
 
     draw() {
@@ -96,11 +121,16 @@ function handleProjectiles() {
     for (let i = 0; i < projectiles.length; i++) {
         projectiles[i].update();
         projectiles[i].draw();
-
-        if(projectiles[i] && projectiles[i].x > canvas.width - cellSize){
+        // towerVision(projectiles[i]);
+        if(projectiles[i] && projectiles[i].x > canvas.width + cellSize){
             projectiles.splice(i, 1);
             i--;
         }
+        // if(projectiles.x <= this.balloonWidth ||
+        //     projectiles.y <= this.balloonHeight) {
+        //         balloons.splice(i, 1);
+        //         i--;
+        // }
     }
 }
 
@@ -133,7 +163,7 @@ class Monkey {
     update() {
         this.timer++;
         if (this.timer %100 === 0) {
-            projectiles.push(new Projectile(this.x + 50, this.y + 50));
+            projectiles.push(new Projectile(this.x + 50, this.y + 50, balloons[0]));
         }
     }
 }
@@ -158,8 +188,38 @@ function handleMonkeys() {
     for(let i = 0; i < monkeys.length; i++){
         monkeys[i].draw();
         monkeys[i].update();
+        // towerVision(monkeys[i]);
     }
 }
+
+
+// Tower Vision Radius
+// Given tower position (Tx, Ty) and enemy position (Ex, Ey). And tower vision radius (rx and ry)
+
+let a = 0;
+let b = 0;
+let Tx = [...monkeys].x;
+let Ty = [...monkeys].y;
+let Ex = [...balloons].x;
+let Ey = [...balloons].y;
+let rx = 10;
+let ry = 10;
+let enemyInRange;
+
+
+function towerVision() {
+    a = (Ex - Tx);
+    a = a * a / (rx * rx)
+    b = (Ey - Ty);
+    b = b * b / (ry * ry)
+
+    // Drawing vision radius
+
+    ctx.arc(Tx, Ty, (rx, ry), 0, Math.PI * 2)
+    ctx.fill();
+    return (enemyInRange = a + b <= 1);
+}
+
 
 
 
@@ -218,44 +278,6 @@ function handleGameGrid() {
         gameGrid[i].draw();
     }
 }
-
-
-
-
-// function game() {
-//     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-// }
-
-
-
-// Tower Vision Radius
-// let getBalloonCoordinates = new Balloon();
-let a = 0;
-let b = 0;
-// let Tx = towerX; // Tower x
-// let Ty = towerY; // Tower y
-// let Ex = balloon[0].x; // Enemy x
-// let Ey = 500; // Enemy y
-let rx = 0; // Tower vision radius x
-let ry = 0; // Tower vision radius y
-
-// Given tower position (Tx, Ty) and enemy position (x, y). And tower vision radius (rx and ry)
-
-function towerVision() {
-    a = (Ex - Tx);
-    a = a * a / (rx * rx)
-    b = (Ey - Ty);
-    b = b * b / (ry * ry)
-
-    enemyInRange = a + b <= 1;
-
-    // Drawing vision radius
-
-    ctx.arc(Tx, Ty, (rx, ry), 0, Math.PI * 2)
-    ctx.fill();
-    return;
-}
-// towerVision();
 
 
 
@@ -319,6 +341,16 @@ function drawGameOver() {
 
 
 
+// Collision
+// const xDifference = projectiles.balloons.x - projectiles.x
+// const yDifference = projectiles.balloons.y - projectiles.y
+// const distance = Math.hypot(xDifference, yDifference);
+// console.log(distance);
+
+
+
+
+
 
 // Game Function
 
@@ -348,7 +380,9 @@ function game() {
 }
 game();
 
-function collision(first, second) {
+
+
+    function collision(first, second) {
     if(!(first.x > second.x + second.width || 
         first.x + first.width < second.x || 
         first.y > second.y + second.height || 
