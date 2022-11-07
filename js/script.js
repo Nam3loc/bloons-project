@@ -24,6 +24,44 @@ function drawPath() {
 
 
 
+// Creating gameGrid
+const cellSize = 100;
+const cellGap = 3;
+const gameGrid = [];
+
+class Cell {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.width = cellSize;
+        this.height = cellSize;
+    }
+
+    draw() {
+        if (mouse.x && mouse.y && collision(this, mouse)) {
+            ctx.strokeStyle = 'black';
+            ctx.strokeRect(this.x, this.y, this.width, this.height);
+        }
+    }
+}
+
+function createGrid() {
+    for(let y = cellSize; y < canvas.height; y += cellSize){
+        for(let x = 0; x < canvas.width; x += cellSize){
+            gameGrid.push(new Cell(x, y));
+        }
+    }
+}
+createGrid();
+
+function handleGameGrid() {
+    for(let i = 0; i < gameGrid.length; i++) {
+        gameGrid[i].draw();
+    }
+}
+
+
+
 
 // Classes
 
@@ -44,15 +82,12 @@ class Balloon {
 
         this.speed = 0.6;
         this.movement = this.speed;
+
+        this.layers = 1;
     }
 
     update() {
         this.x += this.movement;
-
-        // if(projectiles.x <= this.balloonWidth ||
-        //     projectiles.y <= this.balloonHeight) {
-        //         balloons.splice(i, 1);
-        //     }
     }
 
     draw() {
@@ -97,6 +132,8 @@ class Projectile {
         }
 
         this.enemy = enemy;
+
+        this.power = 1;
     }
 
     update() {
@@ -121,16 +158,24 @@ function handleProjectiles() {
     for (let i = 0; i < projectiles.length; i++) {
         projectiles[i].update();
         projectiles[i].draw();
-        // towerVision(projectiles[i]);
+        for(let j = 0; j < balloons.length; j++){
+            if(balloons[j] && projectiles[i] && collision(projectiles[i], balloons[j])){
+                balloons[j].layers -= projectiles[i].power;
+                if(balloons[j].layers <= 0){
+                    balloons.splice(j, 1);
+                    j--;
+                    gold++;
+                }
+                
+                projectiles.splice(i, 1);
+                i--;
+            }
+        }
+
         if(projectiles[i] && projectiles[i].x > canvas.width + cellSize){
             projectiles.splice(i, 1);
             i--;
         }
-        // if(projectiles.x <= this.balloonWidth ||
-        //     projectiles.y <= this.balloonHeight) {
-        //         balloons.splice(i, 1);
-        //         i--;
-        // }
     }
 }
 
@@ -155,9 +200,6 @@ class Monkey {
         this.monkeyImage = new Image();
         this.monkeyImage.src = 'images/Dart-Monkey-removebg.png' 
         ctx.drawImage(this.monkeyImage, 0, 0, this.monkeyImage.width, this.monkeyImage.height, this.x, this.y, this.width, this.height);
-
-        // ctx.fillStyle = 'blue';
-        // ctx.fillRect(this.x, this.y, this.width, this.height);
     }
 
     update() {
@@ -195,6 +237,8 @@ function handleMonkeys() {
 
 // Tower Vision Radius
 // Given tower position (Tx, Ty) and enemy position (Ex, Ey). And tower vision radius (rx and ry)
+
+// UNUSED CODE
 
 let a = 0;
 let b = 0;
@@ -240,44 +284,6 @@ canvas.addEventListener('mouseleave', function() {
     mouse.y = undefined;
     mouse.y = undefined;
 })
-
-
-
-// Creating gameGrid
-const cellSize = 100;
-const cellGap = 3;
-const gameGrid = [];
-
-class Cell {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
-        this.width = cellSize;
-        this.height = cellSize;
-    }
-
-    draw() {
-        if (mouse.x && mouse.y && collision(this, mouse)) {
-            ctx.strokeStyle = 'black';
-            ctx.strokeRect(this.x, this.y, this.width, this.height);
-        }
-    }
-}
-
-function createGrid() {
-    for(let y = cellSize; y < canvas.height; y += cellSize){
-        for(let x = 0; x < canvas.width; x += cellSize){
-            gameGrid.push(new Cell(x, y));
-        }
-    }
-}
-createGrid();
-
-function handleGameGrid() {
-    for(let i = 0; i < gameGrid.length; i++) {
-        gameGrid[i].draw();
-    }
-}
 
 
 
@@ -337,16 +343,6 @@ function drawGameOver() {
     ctx.fillStyle = 'white';
     ctx.fillText("GAME OVER", canvas.width/2, canvas.height/2 + 5);
 }
-
-
-
-
-// Collision
-// const xDifference = projectiles.balloons.x - projectiles.x
-// const yDifference = projectiles.balloons.y - projectiles.y
-// const distance = Math.hypot(xDifference, yDifference);
-// console.log(distance);
-
 
 
 
