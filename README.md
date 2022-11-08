@@ -1,6 +1,6 @@
 # Bloons Tower Defense Project
 
-Bloons is a tower defefnse game. A tower defense game is a game in which enemies have to cross a map and get to your tower where they will try to destroy your tower. The goal of the game is to place towers down around the enemies path so that the towers can kill the enemies before they reach your tower at the other end of the map.
+Bloons is a tower defense game. A tower defense game is a game in which enemies have to cross a map and get to your tower, where they will try to destroy your tower. The goal of the game is to place towers down around the enemies path so that the towers can kill the enemies before they reach your tower at the other end of the map.
 
 ## Installation
 
