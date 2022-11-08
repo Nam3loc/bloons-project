@@ -2,6 +2,12 @@
 
 Bloons is a tower defense game. A tower defense game is a game in which enemies have to cross a map and get to your tower, where they will try to destroy your tower. The goal of the game is to place towers down around the enemies path so that the towers can kill the enemies before they reach your tower at the other end of the map.
 
+## Built with:
+
+-HTML
+-CSS
+-JavaScript
+
 ## Installation
 
 Click this https://nam3loc.github.io/bloons-project/ to get to GitHub pages.
@@ -32,4 +38,4 @@ https://www.youtube.com/watch?v=C4_iRLlPNFc
 
 ## License
 
-[MIT](https://choosealicense.com/licenses/mit/)
+[MIT](https://choosealicense.com/licenses/mit/) &copy; Coleman Escue
