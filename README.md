@@ -36,6 +36,8 @@ https://www.youtube.com/watch?v=GFO_txvwK_c&t=11919s
 
 https://www.youtube.com/watch?v=C4_iRLlPNFc
 
+Christina Takara
+
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/) &copy; Coleman Escue
