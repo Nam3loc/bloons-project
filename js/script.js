@@ -109,6 +109,11 @@ function handleBalloons() {
     if (frame % 100 === 0) {
         balloons.push(new Balloon())
     }
+    if(balloons.length === 1){
+        balloons.push(new Balloon())
+    } else {
+        this.speed++;
+    }
 }
 
 
@@ -194,6 +199,7 @@ class Monkey {
         this.shooting = false;
         this.projectiles = [];
         this.timer = 0;
+        this.radius = 20;
     }
 
     draw() {
@@ -204,7 +210,7 @@ class Monkey {
 
     update() {
         this.timer++;
-        if (this.timer %100 === 0) {
+        if (this.timer % 100 === 0) {
             projectiles.push(new Projectile(this.x + 50, this.y + 50, balloons[0]));
         }
     }
@@ -378,7 +384,8 @@ game();
 
 
 
-    function collision(first, second) {
+
+function collision(first, second) {
     if(!(first.x > second.x + second.width || 
         first.x + first.width < second.x || 
         first.y > second.y + second.height || 
